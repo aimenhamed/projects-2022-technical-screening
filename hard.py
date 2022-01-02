@@ -1,18 +1,18 @@
 """
-Inside conditions.json, you will see a subset of UNSW courses mapped to their 
+Inside conditions.json, you will see a subset of UNSW courses mapped to their
 corresponding text conditions. We have slightly modified the text conditions
 to make them simpler compared to their original versions.
 
-Your task is to complete the is_unlocked function which helps students determine 
-if their course can be taken or not. 
+Your task is to complete the is_unlocked function which helps students determine
+if their course can be taken or not.
 
 We will run our hidden tests on your submission and look at your success rate.
-We will only test for courses inside conditions.json. We will also look over the 
+We will only test for courses inside conditions.json. We will also look over the
 code by eye.
 
 NOTE: This challenge is EXTREMELY hard and we are not expecting anyone to pass all
 our tests. In fact, we are not expecting many people to even attempt this.
-For complete transparency, this is worth more than the easy challenge. 
+For complete transparency, this is worth more than the easy challenge.
 A good solution is favourable but does not guarantee a spot in Projects because
 we will also consider many other criteria.
 """
@@ -23,22 +23,41 @@ with open("./conditions.json") as f:
     CONDITIONS = json.load(f)
     f.close()
 
+
 def is_unlocked(courses_list, target_course):
-    """Given a list of course codes a student has taken, return true if the target_course 
+    """Given a list of course codes a student has taken, return true if the target_course
     can be unlocked by them.
-    
+
     You do not have to do any error checking on the inputs and can assume that
     the target_course always exists inside conditions.json
 
     You can assume all courses are worth 6 units of credit
     """
-    
-    # TODO: COMPLETE THIS FUNCTION!!!
-    
-    return True
+
+    conditions_list = CONDITIONS[target_course].split('or')
+
+    # check if conditions are AND or else just check for one
+    if len(conditions_list) == 1:
+        conditions_list = CONDITIONS[target_course].split('and')
+    else:
+        for course in conditions_list:
+            for taken_course in courses_list:
+                if taken_course in course:
+                    return True
+
+    target = len(conditions_list)
+    count = 0
+    for course in conditions_list:
+        for taken_course in courses_list:
+            if taken_course in course:
+                count += 1
+
+    if (count == target):
+        return True
+    else:
+        return False
 
 
+result = is_unlocked(["COMP1511", "COMP1531"], "COMP3900")
 
-
-
-    
+print(result)
